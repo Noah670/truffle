@@ -53,7 +53,7 @@ function verifyMigrationStatuses(statuses, deployingStatusString) {
     assert.equal(status.data.contract.address.slice(0, 2), "0x");
     assert.equal(status.data.contract.address.length, 42);
     assert.equal(status.data.deployed, true);
-    cost = parseFloat(status.data.cost);
+    cost = parseFloat(status.data.cost.quantity);
     assert(cost > 0);
     done();
   });
@@ -62,14 +62,14 @@ function verifyMigrationStatuses(statuses, deployingStatusString) {
     const status = statuses[4];
     assert.equal(status.status, "postMigrate");
     assert.equal(status.data.number, 1);
-    assert.equal(parseFloat(status.data.cost), cost);
+    assert.equal(parseFloat(status.data.cost.quantity), cost);
     done();
   });
 
   it("includes lastMigrate status", done => {
     const status = statuses[5];
     assert.equal(status.status, "lastMigrate");
-    assert.equal(parseFloat(status.data.finalCost), cost);
+    assert.equal(parseFloat(status.data.finalCost.quantity), cost);
     done();
   });
 

@@ -309,17 +309,24 @@ class Reporter {
    * @param  {Boolean} isLast  true if this the last file in the sequence.
    */
   async postMigrate(isLast) {
+    const totals = this.getTotals();
     let data = {};
     data.number = this.summary[this.currentFileIndex].number;
-    data.cost = this.getTotals().cost;
-    this.summary[this.currentFileIndex].totalCost = data.cost;
+    data.cost = {
+      quantity: totals.cost,
+      unit: "ETH"
+    };
+    this.summary[this.currentFileIndex].totalCost = data.cost.quantity;
 
     let message = this.messages.steps("postMigrate", data);
     this.deployer.logger.log(message);
 
     if (isLast) {
-      data.totalDeployments = this.getTotals().deployments;
-      data.finalCost = this.getTotals().finalCost;
+      data.totalDeployments = totals.deployments;
+      data.finalCost = {
+        quantity: totals.finalCost,
+        unit: "ETH"
+      };
 
       this.summary.totalDeployments = data.totalDeployments;
       this.summary.finalCost = data.finalCost;
@@ -387,11 +394,20 @@ class Reporter {
       const value = new web3Utils.BN(tx.value);
       const cost = gasPrice.mul(gas).add(value);
 
-      data.gasPrice = web3Utils.fromWei(gasPrice, "gwei");
+      data.gasPrice = {
+        quantity: web3Utils.fromWei(gasPrice, "gwei"),
+        unit: "gwei"
+      };
       data.gas = gas.toString(10);
       data.from = tx.from;
-      data.value = web3Utils.fromWei(value, "ether");
-      data.cost = web3Utils.fromWei(cost, "ether");
+      data.value = {
+        quantity: web3Utils.fromWei(value, "ether"),
+        unit: "ETH"
+      };
+      data.cost = {
+        quantity: web3Utils.fromWei(cost, "ether"),
+        unit: "ETH"
+      };
       data.balance = web3Utils.fromWei(balance, "ether");
 
       this.currentGasTotal = this.currentGasTotal.add(gas);
