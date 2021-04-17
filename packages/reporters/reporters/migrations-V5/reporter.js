@@ -382,7 +382,7 @@ class Reporter {
 
       this.totalUnit = data.totalUnit;
       this.convertCost = data.convertCost;
-      this.currentGasTotal = this.currentGasTotal.add(data.gas);
+      this.currentGasTotal = this.currentGasTotal.add(txData.gas);
       this.currentCostTotal = this.currentCostTotal.add(txData.cost);
       this.currentAddress = this.from;
       this.deployments++;
